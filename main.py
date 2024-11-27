@@ -12,14 +12,14 @@ def normalize_fio(contact):
 
 
 def format_phone(phone):
+    pattern = r'(\+7|8)?(\d{3})(\d{3})(\d{2})(\d{2})(\d*)'
+    pattern_sub = r'+7(\2)\3-\4-\5'
+
     phone = re.sub(r'\D', '', phone)
     if len(phone) == 10 and phone.startswith('9'):
-        return f"+7({phone[0:3]}){phone[3:6]}-{phone[6:8]}-{phone[8:]}"
+        return re.sub(pattern, pattern_sub, phone)
     elif len(phone) > 10:
-        main_phone = re.sub(
-            r'(\+7|8)?(\d{3})(\d{3})(\d{2})(\d{2})(\d*)',
-            r"+7(\2)\3-\4-\5", phone[1:]
-            )
+        main_phone = re.sub(pattern, pattern_sub, phone[1:])
         ext = phone[11:]
         return main_phone + f" доб.{ext.strip()}" if ext.strip() else main_phone
     return phone
